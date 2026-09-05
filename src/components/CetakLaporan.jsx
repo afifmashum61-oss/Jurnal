@@ -115,7 +115,7 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
             {profilGuru?.sekolah || 'SMA NEGERI 1 NUSANTARA'}
           </h2>
           <p className="text-xs font-medium text-slate-700 mt-1">
-            {profilGuru?.alamatSekolah || 'Jl. Pendidikan No. 45, Kota Edukasi'}
+            {profilGuru?.alamatSekolah || 'Jl. Darussalam No. 01, Sengon, Jombang'}
           </p>
           <h3 className="font-bold text-sm tracking-wide text-teal-800 uppercase mt-3">
             JURNAL HARIAN KEGIATAN PEMBELAJARAN GURU
@@ -206,20 +206,22 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
 
         {/* SIGNATURE BLOCK */}
         <div className="pt-8 grid grid-cols-2 text-xs font-semibold text-center print-break-inside-avoid">
+          {/* SISI KIRI: Kepala Sekolah (dengan NIP. -) */}
           <div>
             <p>Mengetahui,</p>
             <p className="font-bold text-slate-900">Kepala Sekolah</p>
             <div className="h-20" /> {/* Space for physical signature */}
-            <p className="font-extrabold underline text-slate-900">{profilGuru?.kepalaSekolah || 'Dr. H. Bambang Gunawan, M.Pd.'}</p>
-            <p className="text-slate-600 text-[11px]">NIP. {profilGuru?.nipKepalaSekolah || '19720815 199802 1 002'}</p>
+            <p className="font-extrabold underline text-slate-900">{profilGuru?.kepalaSekolah || 'Dr. Achmad Junaidi, S.Si, M.S.I'}</p>
+            <p className="text-slate-600 text-[11px]">NIP. {profilGuru?.nipKepalaSekolah || '-'}</p>
           </div>
 
+          {/* SISI KANAN: Guru Mata Pelajaran */}
           <div>
-            <p>Kota Edukasi, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            <p>{profilGuru?.kota || 'Jombang'}, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             <p className="font-bold text-slate-900">Guru Mata Pelajaran</p>
             <div className="h-20" /> {/* Space for physical signature */}
             <p className="font-extrabold underline text-slate-900">{profilGuru?.nama || 'IVA MAKHMUDAH, S.Pd'}</p>
-            <p className="text-slate-600 text-[11px]">{profilGuru?.nip || '-'}</p>
+            <p className="text-slate-600 text-[11px]">{profilGuru?.nip || 'PEG ID 20503856195003'}</p>
           </div>
         </div>
 

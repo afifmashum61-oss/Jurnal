@@ -5,11 +5,12 @@ export const initialProfilGuru = {
   nip: "PEG ID 20503856195003",
   foto: "/foto-guru.png",
   sekolah: "MA Darussalam Sengon",
-  alamatSekolah: "Jl. Darussalam No. 01, Sengon",
+  alamatSekolah: "Jl. Darussalam No. 01, Sengon, Jombang",
+  kota: "Jombang",
   tahunAjaran: "2025/2026",
   semester: "Ganjil",
-  kepalaSekolah: "Drs. H. Ahmad Dahlan, M.Pd.",
-  nipKepalaSekolah: "19750310 199903 1 004",
+  kepalaSekolah: "Dr. Achmad Junaidi, S.Si, M.S.I",
+  nipKepalaSekolah: "-",
   mataPelajaran: ["Bahasa Arab", "Sejarah Kebudayaan Islam (SKI)"],
 };
 

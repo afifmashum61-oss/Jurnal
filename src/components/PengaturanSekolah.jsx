@@ -311,6 +311,19 @@ export default function PengaturanSekolah({
 
             <div>
               <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Kota / Lokasi Tanda Tangan
+              </label>
+              <input
+                type="text"
+                placeholder="Jombang"
+                value={formData.kota || 'Jombang'}
+                onChange={(e) => setFormData({ ...formData, kota: e.target.value })}
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-medium dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
                 Tahun Ajaran
               </label>
               <input

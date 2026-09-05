@@ -48,13 +48,17 @@ export default function App() {
     const saved = localStorage.getItem('jpg_profilGuru');
     if (saved) {
       const parsed = JSON.parse(saved);
-      const needUpdate = !parsed.mataPelajaran || !parsed.mataPelajaran.includes('Bahasa Arab');
+      const needUpdate = !parsed.mataPelajaran || !parsed.mataPelajaran.includes('Bahasa Arab') || !parsed.kota || parsed.kota !== 'Jombang';
       if (parsed.nama !== 'IVA MAKHMUDAH, S.Pd' || needUpdate) {
         const updated = {
           ...parsed,
           nama: 'IVA MAKHMUDAH, S.Pd',
           nip: 'PEG ID 20503856195003',
           sekolah: 'MA Darussalam Sengon',
+          alamatSekolah: 'Jl. Darussalam No. 01, Sengon, Jombang',
+          kota: 'Jombang',
+          kepalaSekolah: parsed.kepalaSekolah && parsed.kepalaSekolah !== 'Drs. H. Ahmad Dahlan, M.Pd.' ? parsed.kepalaSekolah : 'Dr. Achmad Junaidi, S.Si, M.S.I',
+          nipKepalaSekolah: parsed.nipKepalaSekolah && parsed.nipKepalaSekolah !== '19750310 199903 1 004' ? parsed.nipKepalaSekolah : '-',
           mataPelajaran: targetMapel
         };
         localStorage.setItem('jpg_profilGuru', JSON.stringify(updated));
