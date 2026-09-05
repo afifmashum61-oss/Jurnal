@@ -16,6 +16,7 @@ import {
   Check,
   Printer
 } from 'lucide-react';
+import { saveJurnalToFirestore, deleteJurnalFromFirestore } from '../services/firestoreService';
 
 export default function JurnalHarian({ 
   jurnalList, 
@@ -105,6 +106,7 @@ export default function JurnalHarian({
   const handleDelete = (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus catatan jurnal harian ini?')) {
       setJurnalList(jurnalList.filter(j => j.id !== id));
+      deleteJurnalFromFirestore(id);
     }
   };
 
@@ -118,7 +120,9 @@ export default function JurnalHarian({
 
     if (editingId) {
       // Update existing
-      setJurnalList(jurnalList.map(j => j.id === editingId ? { ...formData, id: editingId } : j));
+      const updatedItem = { ...formData, id: editingId };
+      setJurnalList(jurnalList.map(j => j.id === editingId ? updatedItem : j));
+      saveJurnalToFirestore(updatedItem);
     } else {
       // Create new
       const newEntry = {
@@ -126,6 +130,7 @@ export default function JurnalHarian({
         id: `jur-${Date.now()}`
       };
       setJurnalList([newEntry, ...jurnalList]);
+      saveJurnalToFirestore(newEntry);
     }
 
     setIsFormOpen(false);

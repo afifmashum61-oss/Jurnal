@@ -18,6 +18,13 @@ import {
   initialCatatanSiswa 
 } from './data/initialData';
 
+import { 
+  subscribeJurnal, 
+  saveJurnalToFirestore, 
+  deleteJurnalFromFirestore, 
+  saveProfilToFirestore 
+} from './services/firestoreService';
+
 export default function App() {
   // Navigation State
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -73,9 +80,10 @@ export default function App() {
   const [isJurnalFormOpen, setIsJurnalFormOpen] = useState(false);
   const [selectedJurnalForDetail, setSelectedJurnalForDetail] = useState(null);
 
-  // Sync state changes to localStorage
+  // Sync state changes to localStorage & Firebase Firestore
   useEffect(() => {
     localStorage.setItem('jpg_profilGuru', JSON.stringify(profilGuru));
+    saveProfilToFirestore(profilGuru);
   }, [profilGuru]);
 
   useEffect(() => {
@@ -97,6 +105,18 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('jpg_catatanList', JSON.stringify(catatanList));
   }, [catatanList]);
+
+  // Real-time Firebase Firestore Subscription Listener
+  useEffect(() => {
+    const unsubscribe = subscribeJurnal((cloudJournals) => {
+      if (cloudJournals && cloudJournals.length > 0) {
+        setJurnalList(cloudJournals);
+      }
+    });
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   // Dark Mode Class Effect
   useEffect(() => {
