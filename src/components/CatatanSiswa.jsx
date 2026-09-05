@@ -4,7 +4,8 @@ import { FileText, Plus, Search, Award, ShieldAlert, Trash2, X, Check } from 'lu
 export default function CatatanSiswa({ 
   catatanList, 
   setCatatanList, 
-  kelasList 
+  kelasList,
+  showToast 
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function CatatanSiswa({
       { ...formData, id: `cat-${Date.now()}` },
       ...catatanList
     ]);
+    if (showToast) showToast(`Catatan kejadian siswa (${formData.namaSiswa}) berhasil disimpan!`);
     setIsModalOpen(false);
     setFormData({
       tanggal: new Date().toISOString().split('T')[0],
@@ -39,6 +41,7 @@ export default function CatatanSiswa({
   const handleDelete = (id) => {
     if (window.confirm('Hapus catatan kejadian siswa ini?')) {
       setCatatanList(catatanList.filter(c => c.id !== id));
+      if (showToast) showToast('Catatan siswa berhasil dihapus!', 'Berhasil Dihapus');
     }
   };
 

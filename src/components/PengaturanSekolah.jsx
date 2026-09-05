@@ -4,7 +4,8 @@ import { Settings, Save, Check, RefreshCw, Upload, ShieldCheck, User } from 'luc
 export default function PengaturanSekolah({ 
   profilGuru, 
   setProfilGuru, 
-  onResetData 
+  onResetData,
+  showToast 
 }) {
   const [formData, setFormData] = useState({ ...profilGuru });
   const [mapelInput, setMapelInput] = useState('');
@@ -14,6 +15,7 @@ export default function PengaturanSekolah({
     e.preventDefault();
     setProfilGuru({ ...formData });
     setIsSaved(true);
+    if (showToast) showToast('Profil Guru & Data Sekolah berhasil disimpan ke Cloud & Lokal!');
     setTimeout(() => setIsSaved(false), 3000);
   };
 

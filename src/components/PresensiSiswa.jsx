@@ -20,7 +20,8 @@ export default function PresensiSiswa({
   kelasList, 
   siswaList, 
   setSiswaList, 
-  onSendPresensiToJurnal 
+  onSendPresensiToJurnal,
+  showToast 
 }) {
   const [selectedKelas, setSelectedKelas] = useState(kelasList[0]?.id || 'X-1');
   const [tanggalPresensi, setTanggalPresensi] = useState(new Date().toISOString().split('T')[0]);
@@ -98,6 +99,7 @@ export default function PresensiSiswa({
       [selectedKelas]: updatedClassList
     });
 
+    if (showToast) showToast(`Siswa ${newSiswaData.nama} berhasil ditambahkan!`);
     setNewSiswaData({ nis: '', nama: '', gender: 'L' });
     setIsAddSiswaOpen(false);
   };
@@ -109,6 +111,7 @@ export default function PresensiSiswa({
         ...siswaList,
         [selectedKelas]: updatedClassList
       });
+      if (showToast) showToast('Data siswa berhasil dihapus!', 'Berhasil Dihapus');
     }
   };
 
@@ -185,7 +188,11 @@ export default function PresensiSiswa({
       [selectedKelas]: updatedClassList
     });
 
-    alert(`Berhasil mengimpor ${newStudents.length} siswa baru ke ${selectedKelas}!`);
+    if (showToast) {
+      showToast(`Berhasil mengimpor ${newStudents.length} siswa ke kelas ${selectedKelas}!`);
+    } else {
+      alert(`Berhasil mengimpor ${newStudents.length} siswa baru ke ${selectedKelas}!`);
+    }
     setBulkText('');
     setIsBulkImportOpen(false);
   };
@@ -214,6 +221,9 @@ export default function PresensiSiswa({
       alpa: countAlpa,
       siswaAbsenDetail: absentDetails.length > 0 ? absentDetails.join('. ') : 'Nihil (Hadir Semua)'
     });
+    if (showToast) {
+      showToast(`Data Presensi Kelas ${selectedKelas} dialihkan ke Jurnal Harian!`);
+    }
   };
 
   return (

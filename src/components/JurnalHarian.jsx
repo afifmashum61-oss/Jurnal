@@ -26,12 +26,25 @@ export default function JurnalHarian({
   isFormOpen,
   setIsFormOpen,
   selectedJurnalForDetail,
-  setSelectedJurnalForDetail
+  setSelectedJurnalForDetail,
+  showToast: globalShowToast
 }) {
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedKelasFilter, setSelectedKelasFilter] = useState('semua');
   const [selectedMapelFilter, setSelectedMapelFilter] = useState('semua');
+
+  // Toast Notification State (Fallback local)
+  const [localToast, setLocalToast] = useState(null);
+
+  const triggerToast = (msg, title = 'Berhasil Disimpan') => {
+    if (globalShowToast) {
+      globalShowToast(msg, title);
+    } else {
+      setLocalToast(msg);
+      setTimeout(() => setLocalToast(null), 3500);
+    }
+  };
 
   // Form State
   const [editingId, setEditingId] = useState(null);
@@ -107,6 +120,7 @@ export default function JurnalHarian({
     if (window.confirm('Apakah Anda yakin ingin menghapus catatan jurnal harian ini?')) {
       setJurnalList(jurnalList.filter(j => j.id !== id));
       deleteJurnalFromFirestore(id);
+      triggerToast('Catatan jurnal harian berhasil dihapus!', 'Berhasil Dihapus');
     }
   };
 
@@ -123,6 +137,7 @@ export default function JurnalHarian({
       const updatedItem = { ...formData, id: editingId };
       setJurnalList(jurnalList.map(j => j.id === editingId ? updatedItem : j));
       saveJurnalToFirestore(updatedItem);
+      triggerToast('Jurnal harian berhasil diperbarui dan tersimpan ke Cloud Firestore!');
     } else {
       // Create new
       const newEntry = {
@@ -131,6 +146,7 @@ export default function JurnalHarian({
       };
       setJurnalList([newEntry, ...jurnalList]);
       saveJurnalToFirestore(newEntry);
+      triggerToast('Jurnal harian baru berhasil ditambahkan dan tersimpan!');
     }
 
     setIsFormOpen(false);

@@ -9,6 +9,7 @@ import CatatanSiswa from './components/CatatanSiswa';
 import CetakLaporan from './components/CetakLaporan';
 import PengaturanSekolah from './components/PengaturanSekolah';
 
+import { CheckCircle2, X } from 'lucide-react';
 import { 
   initialProfilGuru, 
   initialKelas, 
@@ -30,6 +31,16 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
+
+  // Global Toast Notification State
+  const [toast, setToast] = useState({ show: false, message: '', title: 'Berhasil Disimpan' });
+
+  const showToast = (message, title = 'Berhasil Disimpan') => {
+    setToast({ show: true, message, title });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, show: false }));
+    }, 3500);
+  };
 
   // App Master Data States (Persisted in LocalStorage)
   const [profilGuru, setProfilGuru] = useState(() => {
@@ -202,6 +213,7 @@ export default function App() {
               setIsFormOpen={setIsJurnalFormOpen}
               selectedJurnalForDetail={selectedJurnalForDetail}
               setSelectedJurnalForDetail={setSelectedJurnalForDetail}
+              showToast={showToast}
             />
           )}
 
@@ -211,6 +223,7 @@ export default function App() {
               setJadwalList={setJadwalList}
               kelasList={kelasList}
               profilGuru={profilGuru}
+              showToast={showToast}
             />
           )}
 
@@ -220,6 +233,7 @@ export default function App() {
               siswaList={siswaList}
               setSiswaList={setSiswaList}
               onSendPresensiToJurnal={handleSendPresensiToJurnal}
+              showToast={showToast}
             />
           )}
 
@@ -228,6 +242,7 @@ export default function App() {
               catatanList={catatanList}
               setCatatanList={setCatatanList}
               kelasList={kelasList}
+              showToast={showToast}
             />
           )}
 
@@ -244,10 +259,30 @@ export default function App() {
               profilGuru={profilGuru}
               setProfilGuru={setProfilGuru}
               onResetData={handleResetData}
+              showToast={showToast}
             />
           )}
         </main>
       </div>
+
+      {/* Global Toast Notification Popup */}
+      {toast.show && (
+        <div className="fixed top-5 right-5 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-emerald-600 dark:bg-emerald-700 text-white shadow-2xl rounded-2xl border border-emerald-400/40 transform transition-all duration-300">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h5 className="font-extrabold text-[10px] tracking-wider uppercase opacity-90">{toast.title}</h5>
+            <p className="text-xs sm:text-sm font-bold mt-0.5">{toast.message}</p>
+          </div>
+          <button 
+            onClick={() => setToast(prev => ({ ...prev, show: false }))}
+            className="ml-3 p-1 hover:bg-white/20 rounded-lg transition"
+          >
+            <X className="w-4 h-4 text-white" />
+          </button>
+        </div>
+      )}
 
     </div>
   );
