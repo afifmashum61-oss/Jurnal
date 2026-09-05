@@ -217,7 +217,7 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
 
           {/* SISI KANAN: Guru Mata Pelajaran */}
           <div>
-            <p>{profilGuru?.kota || 'Jombang'}, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            <p>{(!profilGuru?.kota || profilGuru?.kota === 'Kota Edukasi') ? 'Jombang' : profilGuru.kota}, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
             <p className="font-bold text-slate-900">Guru Mata Pelajaran</p>
             <div className="h-20" /> {/* Space for physical signature */}
             <p className="font-extrabold underline text-slate-900">{profilGuru?.nama || 'IVA MAKHMUDAH, S.Pd'}</p>

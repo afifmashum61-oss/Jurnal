@@ -46,27 +46,28 @@ export default function App() {
   const [profilGuru, setProfilGuru] = useState(() => {
     const targetMapel = ["Bahasa Arab", "Sejarah Kebudayaan Islam (SKI)"];
     const saved = localStorage.getItem('jpg_profilGuru');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      const needUpdate = !parsed.mataPelajaran || !parsed.mataPelajaran.includes('Bahasa Arab') || !parsed.kota || parsed.kota !== 'Jombang';
-      if (parsed.nama !== 'IVA MAKHMUDAH, S.Pd' || needUpdate) {
-        const updated = {
-          ...parsed,
-          nama: 'IVA MAKHMUDAH, S.Pd',
-          nip: 'PEG ID 20503856195003',
-          sekolah: 'MA Darussalam Sengon',
-          alamatSekolah: 'Jl. Darussalam No. 01, Sengon, Jombang',
-          kota: 'Jombang',
-          kepalaSekolah: parsed.kepalaSekolah && parsed.kepalaSekolah !== 'Drs. H. Ahmad Dahlan, M.Pd.' ? parsed.kepalaSekolah : 'Dr. Achmad Junaidi, S.Si, M.S.I',
-          nipKepalaSekolah: parsed.nipKepalaSekolah && parsed.nipKepalaSekolah !== '19750310 199903 1 004' ? parsed.nipKepalaSekolah : '-',
-          mataPelajaran: targetMapel
-        };
-        localStorage.setItem('jpg_profilGuru', JSON.stringify(updated));
-        return updated;
-      }
-      return parsed;
+    let data = saved ? JSON.parse(saved) : { ...initialProfilGuru };
+
+    // Force overwrite legacy/cached values
+    data.nama = 'IVA MAKHMUDAH, S.Pd';
+    data.nip = 'PEG ID 20503856195003';
+    data.sekolah = 'MA Darussalam Sengon';
+    if (!data.kota || data.kota === 'Kota Edukasi') data.kota = 'Jombang';
+    if (!data.alamatSekolah || data.alamatSekolah.includes('Kota Edukasi') || data.alamatSekolah.includes('Pendidikan')) {
+      data.alamatSekolah = 'Jl. Darussalam No. 01, Sengon, Jombang';
     }
-    return initialProfilGuru;
+    if (!data.kepalaSekolah || data.kepalaSekolah.includes('Ahmad Dahlan') || data.kepalaSekolah.includes('Bambang Gunawan')) {
+      data.kepalaSekolah = 'Dr. Achmad Junaidi, S.Si, M.S.I';
+    }
+    if (!data.nipKepalaSekolah || data.nipKepalaSekolah.startsWith('19')) {
+      data.nipKepalaSekolah = '-';
+    }
+    if (!data.mataPelajaran || !data.mataPelajaran.includes('Bahasa Arab')) {
+      data.mataPelajaran = targetMapel;
+    }
+
+    localStorage.setItem('jpg_profilGuru', JSON.stringify(data));
+    return data;
   });
 
   const [kelasList, setKelasList] = useState(() => {
