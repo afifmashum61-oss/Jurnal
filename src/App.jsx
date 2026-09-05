@@ -44,15 +44,18 @@ export default function App() {
 
   // App Master Data States (Persisted in LocalStorage)
   const [profilGuru, setProfilGuru] = useState(() => {
+    const targetMapel = ["Bahasa Arab", "Sejarah Kebudayaan Islam (SKI)"];
     const saved = localStorage.getItem('jpg_profilGuru');
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (parsed.nama !== 'IVA MAKHMUDAH, S.Pd') {
+      const needUpdate = !parsed.mataPelajaran || !parsed.mataPelajaran.includes('Bahasa Arab');
+      if (parsed.nama !== 'IVA MAKHMUDAH, S.Pd' || needUpdate) {
         const updated = {
           ...parsed,
           nama: 'IVA MAKHMUDAH, S.Pd',
           nip: 'PEG ID 20503856195003',
-          sekolah: 'MA Darussalam Sengon'
+          sekolah: 'MA Darussalam Sengon',
+          mataPelajaran: targetMapel
         };
         localStorage.setItem('jpg_profilGuru', JSON.stringify(updated));
         return updated;
@@ -74,12 +77,28 @@ export default function App() {
 
   const [jadwalList, setJadwalList] = useState(() => {
     const saved = localStorage.getItem('jpg_jadwalList');
-    return saved ? JSON.parse(saved) : initialJadwal;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.some(j => j.mapel === 'Matematika' || j.mapel === 'Informatika')) {
+        localStorage.setItem('jpg_jadwalList', JSON.stringify(initialJadwal));
+        return initialJadwal;
+      }
+      return parsed;
+    }
+    return initialJadwal;
   });
 
   const [jurnalList, setJurnalList] = useState(() => {
     const saved = localStorage.getItem('jpg_jurnalList');
-    return saved ? JSON.parse(saved) : initialJurnal;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.some(j => j.mapel === 'Matematika' || j.mapel === 'Informatika')) {
+        localStorage.setItem('jpg_jurnalList', JSON.stringify(initialJurnal));
+        return initialJurnal;
+      }
+      return parsed;
+    }
+    return initialJurnal;
   });
 
   const [catatanList, setCatatanList] = useState(() => {

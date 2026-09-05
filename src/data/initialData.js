@@ -10,7 +10,7 @@ export const initialProfilGuru = {
   semester: "Ganjil",
   kepalaSekolah: "Drs. H. Ahmad Dahlan, M.Pd.",
   nipKepalaSekolah: "19750310 199903 1 004",
-  mataPelajaran: ["Matematika", "Informatika", "IPA Terpadu"],
+  mataPelajaran: ["Bahasa Arab", "Sejarah Kebudayaan Islam (SKI)"],
 };
 
 export const initialKelas = [
@@ -44,13 +44,13 @@ export const initialSiswa = {
 };
 
 export const initialJadwal = [
-  { id: "j1", hari: "Senin", jamKe: "1 - 2", waktu: "07.00 - 08.30", kelas: "XI-IPA1", mapel: "Matematika", ruangan: "Lab Komp 1" },
-  { id: "j2", hari: "Senin", jamKe: "4 - 5", waktu: "09.45 - 11.15", kelas: "X-1", mapel: "Informatika", ruangan: "R. 101" },
-  { id: "j3", hari: "Selasa", jamKe: "2 - 3", waktu: "07.45 - 09.15", kelas: "XI-IPA2", mapel: "Matematika", ruangan: "R. 202" },
-  { id: "j4", hari: "Selasa", jamKe: "6 - 7", waktu: "12.30 - 14.00", kelas: "X-2", mapel: "Informatika", ruangan: "Lab Komp 2" },
-  { id: "j5", hari: "Rabu", jamKe: "1 - 3", waktu: "07.00 - 09.15", kelas: "XII-MIPA", mapel: "Fisika Dasar", ruangan: "Lab Fisika" },
-  { id: "j6", hari: "Kamis", jamKe: "3 - 4", waktu: "08.30 - 10.00", kelas: "XI-IPA1", mapel: "Matematika", ruangan: "R. 201" },
-  { id: "j7", hari: "Jumat", jamKe: "1 - 2", waktu: "07.00 - 08.30", kelas: "X-1", mapel: "Informatika", ruangan: "R. 101" },
+  { id: "j1", hari: "Senin", jamKe: "1 - 2", waktu: "07.00 - 08.30", kelas: "XI-IPA1", mapel: "Bahasa Arab", ruangan: "R. 101" },
+  { id: "j2", hari: "Senin", jamKe: "4 - 5", waktu: "09.45 - 11.15", kelas: "X-1", mapel: "Sejarah Kebudayaan Islam (SKI)", ruangan: "R. 102" },
+  { id: "j3", hari: "Selasa", jamKe: "2 - 3", waktu: "07.45 - 09.15", kelas: "XI-IPA2", mapel: "Bahasa Arab", ruangan: "R. 202" },
+  { id: "j4", hari: "Selasa", jamKe: "6 - 7", waktu: "12.30 - 14.00", kelas: "X-2", mapel: "Sejarah Kebudayaan Islam (SKI)", ruangan: "R. 103" },
+  { id: "j5", hari: "Rabu", jamKe: "1 - 3", waktu: "07.00 - 09.15", kelas: "XII-MIPA", mapel: "Bahasa Arab", ruangan: "R. 301" },
+  { id: "j6", hari: "Kamis", jamKe: "3 - 4", waktu: "08.30 - 10.00", kelas: "XI-IPA1", mapel: "Sejarah Kebudayaan Islam (SKI)", ruangan: "R. 201" },
+  { id: "j7", hari: "Jumat", jamKe: "1 - 2", waktu: "07.00 - 08.30", kelas: "X-1", mapel: "Bahasa Arab", ruangan: "R. 101" },
 ];
 
 export const initialJurnal = [
@@ -60,17 +60,17 @@ export const initialJurnal = [
     hari: "Selasa",
     jamKe: "2 - 3",
     kelas: "XI-IPA1",
-    mapel: "Matematika",
-    materi: "Matriks dan Operasi Perkalian Matriks",
-    tujuanPembelajaran: "Siswa mampu mengalikan dua matriks berordo 2x2 dan 3x3 dengan teliti.",
+    mapel: "Bahasa Arab",
+    materi: "Tarkib & Qira'ah - Ad-Darsul Awwal (Al-Hiwar fil Madrosah)",
+    tujuanPembelajaran: "Peserta didik mampu memahami teks percakapan dan tata bahasa Arab (Jumlah Ismiyyah & Fi'liyyah) dengan tepat.",
     hadir: 32,
     sakit: 1,
     izin: 1,
     alpa: 0,
     siswaAbsenDetail: "Sakit: Aulia Rahma. Izin: Bagas Dewantara (Lomba O2SN).",
-    catatanKejadian: "Diskusi kelompok berjalan sangat aktif. Kelompok 3 tercepat menyelesaikan tantangan soal HOTS.",
+    catatanKejadian: "Diskusi kelompok dan pemutaran audio percakapan bahasa Arab berjalan lancar. Kelompok 3 paling fasih melafalkan hiwar.",
     statusKetercapaian: "Selesai Sesuai Target",
-    mediaPembelajaran: "PPT Interaktif, LKPD Kelompok, Quizizz"
+    mediaPembelajaran: "Audio Hiwar, Modul Bahasa Arab, Cards Game"
   },
   {
     id: "jur-002",
@@ -78,17 +78,17 @@ export const initialJurnal = [
     hari: "Kamis",
     jamKe: "3 - 4",
     kelas: "X-1",
-    mapel: "Informatika",
-    materi: "Algoritma Pemrograman & Flowchart",
-    tujuanPembelajaran: "Peserta didik dapat merancang alur logika algoritma cabang (IF-ELSE) menggunakan simbol flowchart.",
+    mapel: "Sejarah Kebudayaan Islam (SKI)",
+    materi: "Perkembangan Islam pada Masa Khulafaur Rasyidin (Abu Bakar As-Siddiq)",
+    tujuanPembelajaran: "Peserta didik dapat menganalisis strategi dakwah dan kepemimpinan Khalifah Abu Bakar As-Siddiq R.A.",
     hadir: 30,
     sakit: 0,
     izin: 0,
     alpa: 0,
     siswaAbsenDetail: "Nihil (Hadir Semua)",
-    catatanKejadian: "Beberapa siswa masih terkendala membedakan simbol jajar genjang (Input/Output) dan belah ketupat (Kondisi). Perlu latihan tambahan.",
-    statusKetercapaian: "Dilanjutkan Minggu Depan",
-    mediaPembelajaran: "Draw.io, Whiteboard, LKPD Mandiri"
+    catatanKejadian: "Siswa antusias membuat peta konsep silsilah kepemimpinan dan peristiwa Kodifikasi Al-Qur'an.",
+    statusKetercapaian: "Selesai Sesuai Target",
+    mediaPembelajaran: "Peta Konsep, Timeline Digital, Modul SKI"
   },
   {
     id: "jur-003",
@@ -96,17 +96,17 @@ export const initialJurnal = [
     hari: "Jumat",
     jamKe: "1 - 2",
     kelas: "XI-IPA1",
-    mapel: "Matematika",
-    materi: "Determinant & Invers Matriks 2x2",
-    tujuanPembelajaran: "Peserta didik menentukan nilai determinan matriks dan rumus invers.",
+    mapel: "Bahasa Arab",
+    materi: "Al-Qira'ah: As-Safar wal Istirahah",
+    tujuanPembelajaran: "Siswa mampu menterjemahkan teks bacaan bertema liburan dan menganalisis kosa kata baru (Mufrodat).",
     hadir: 33,
     sakit: 1,
     izin: 0,
     alpa: 0,
     siswaAbsenDetail: "Sakit: Dina Olivia",
-    catatanKejadian: "Kuis singkat 15 menit terlaksana lancar, rerata nilai kuis 85.",
+    catatanKejadian: "Penilaian menterjemahkan teks Arab dilakukan secara individu.",
     statusKetercapaian: "Selesai Sesuai Target",
-    mediaPembelajaran: "Slide Presentasi, Modul Ajar"
+    mediaPembelajaran: "Kamus Bahasa Arab, LKPD Mandiri"
   }
 ];
 

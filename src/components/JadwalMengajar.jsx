@@ -16,7 +16,7 @@ export default function JadwalMengajar({
     jamKe: '1 - 2',
     waktu: '07.00 - 08.30',
     kelas: kelasList[0]?.id || 'X-1',
-    mapel: profilGuru?.mataPelajaran?.[0] || 'Matematika',
+    mapel: profilGuru?.mataPelajaran?.[0] || 'Bahasa Arab',
     ruangan: 'R. 101'
   });
 
@@ -27,7 +27,7 @@ export default function JadwalMengajar({
       jamKe: '1 - 2',
       waktu: '07.00 - 08.30',
       kelas: kelasList[0]?.id || 'X-1',
-      mapel: profilGuru?.mataPelajaran?.[0] || 'Matematika',
+      mapel: profilGuru?.mataPelajaran?.[0] || 'Bahasa Arab',
       ruangan: 'R. 101'
     });
     setIsModalOpen(true);
