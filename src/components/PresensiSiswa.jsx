@@ -3,6 +3,7 @@ import {
   UserCheck, 
   Users, 
   Plus, 
+  Edit,
   Check, 
   AlertCircle, 
   Calendar, 
@@ -18,6 +19,7 @@ import {
 
 export default function PresensiSiswa({ 
   kelasList, 
+  setKelasList,
   siswaList, 
   setSiswaList, 
   onSendPresensiToJurnal,
@@ -39,6 +41,60 @@ export default function PresensiSiswa({
   // Bulk student import modal state
   const [isBulkImportOpen, setIsBulkImportOpen] = useState(false);
   const [bulkText, setBulkText] = useState('');
+
+  // Class Management Quick Modal
+  const [isKelasModalOpen, setIsKelasModalOpen] = useState(false);
+  const [editingClassItem, setEditingClassItem] = useState(null);
+  const [quickKelasForm, setQuickKelasForm] = useState({ id: '', nama: '', jumlahSiswa: 30 });
+
+  const handleOpenAddKelasQuick = () => {
+    setEditingClassItem(null);
+    const nextNum = kelasList.length + 1;
+    setQuickKelasForm({ id: `X-${nextNum}`, nama: `Kelas X-${nextNum} (Fase E)`, jumlahSiswa: 30 });
+    setIsKelasModalOpen(true);
+  };
+
+  const handleOpenEditKelasQuick = (k) => {
+    setEditingClassItem(k);
+    setQuickKelasForm({ id: k.id, nama: k.nama, jumlahSiswa: k.jumlahSiswa || 30 });
+    setIsKelasModalOpen(true);
+  };
+
+  const handleSaveKelasQuick = (e) => {
+    e.preventDefault();
+    if (!quickKelasForm.nama.trim()) return;
+    const classId = (quickKelasForm.id.trim() || quickKelasForm.nama).replace(/\s+/g, '-').toUpperCase();
+
+    if (editingClassItem) {
+      if (setKelasList) {
+        setKelasList(kelasList.map(k => k.id === editingClassItem.id ? { ...k, id: classId, nama: quickKelasForm.nama, jumlahSiswa: Number(quickKelasForm.jumlahSiswa) || 30 } : k));
+      }
+      if (editingClassItem.id !== classId && setSiswaList && siswaList) {
+        const newSiswaList = { ...siswaList };
+        newSiswaList[classId] = newSiswaList[editingClassItem.id] || [];
+        delete newSiswaList[editingClassItem.id];
+        setSiswaList(newSiswaList);
+      }
+      if (selectedKelas === editingClassItem.id) {
+        setSelectedKelas(classId);
+      }
+      if (showToast) showToast(`Nama kelas ${quickKelasForm.nama} berhasil diperbarui!`);
+    } else {
+      if (kelasList.some(k => k.id === classId)) {
+        alert('Kode / ID Kelas sudah ada, mohon gunakan nama lain.');
+        return;
+      }
+      const newClass = { id: classId, nama: quickKelasForm.nama, jumlahSiswa: Number(quickKelasForm.jumlahSiswa) || 30 };
+      if (setKelasList) setKelasList([...kelasList, newClass]);
+      if (setSiswaList && siswaList && !siswaList[classId]) {
+        setSiswaList({ ...siswaList, [classId]: [] });
+      }
+      setSelectedKelas(classId);
+      if (showToast) showToast(`Kelas baru (${quickKelasForm.nama}) berhasil ditambahkan!`);
+    }
+
+    setIsKelasModalOpen(false);
+  };
 
   // Get status for a student (default 'H' = Hadir)
   const getStatus = (studentId) => attendanceMap[studentId] || 'H';
@@ -234,23 +290,46 @@ export default function PresensiSiswa({
         {/* Class Tabs */}
         <div className="flex flex-wrap items-center gap-2">
           {kelasList.map((k) => (
-            <button
-              key={k.id}
-              onClick={() => {
-                setSelectedKelas(k.id);
-                setAttendanceMap({});
-              }}
-              className={`
-                px-4 py-2 rounded-xl text-xs font-bold transition
-                ${selectedKelas === k.id
-                  ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
-                  : 'bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-                }
-              `}
-            >
-              {k.nama}
-            </button>
+            <div key={k.id} className="inline-flex items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedKelas(k.id);
+                  setAttendanceMap({});
+                }}
+                className={`
+                  px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5
+                  ${selectedKelas === k.id
+                    ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
+                    : 'bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                  }
+                `}
+              >
+                <span>{k.nama}</span>
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenEditKelasQuick(k);
+                  }}
+                  className={`p-0.5 rounded transition ${selectedKelas === k.id ? 'hover:bg-teal-700 text-teal-100' : 'hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-400'}`}
+                  title="Edit Nama Kelas"
+                >
+                  <Edit className="w-3 h-3" />
+                </span>
+              </button>
+            </div>
           ))}
+
+          {/* Plus Icon Button to Add Class */}
+          <button
+            type="button"
+            onClick={handleOpenAddKelasQuick}
+            className="px-3 py-2 rounded-xl bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/60 font-bold transition flex items-center gap-1 text-xs border border-teal-200/60 dark:border-teal-800"
+            title="Tambah Kelas Baru (+)"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Tambah Kelas</span>
+          </button>
         </div>
 
         {/* Date Selector, Single Add, & Bulk Import Buttons */}
@@ -578,6 +657,88 @@ export default function PresensiSiswa({
               </div>
 
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Dialog: Quick Add / Edit Kelas */}
+      {isKelasModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+              <h3 className="font-extrabold text-base text-slate-800 dark:text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-teal-600" />
+                <span>{editingClassItem ? 'Edit Nama Kelas' : 'Tambah Kelas Baru (+)'}</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsKelasModalOpen(false)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-400"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveKelasQuick} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Nama Lengkap Kelas (e.g. Kelas X-1 (Fase E))
+                </label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Kelas X-3 (Fase E)"
+                  value={quickKelasForm.nama}
+                  onChange={(e) => setQuickKelasForm({ ...quickKelasForm, nama: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white focus:ring-2 focus:ring-teal-500"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Kode Singkat ID Kelas
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="X-3"
+                    value={quickKelasForm.id}
+                    onChange={(e) => setQuickKelasForm({ ...quickKelasForm, id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white uppercase"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Estimasi Jumlah Siswa
+                  </label>
+                  <input
+                    type="number"
+                    value={quickKelasForm.jumlahSiswa}
+                    onChange={(e) => setQuickKelasForm({ ...quickKelasForm, jumlahSiswa: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white"
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setIsKelasModalOpen(false)}
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md shadow-teal-600/20"
+                >
+                  {editingClassItem ? 'Simpan Perubahan' : 'Tambah Kelas'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

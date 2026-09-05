@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
-import { Settings, Save, Check, RefreshCw, Upload, ShieldCheck, User } from 'lucide-react';
+import { Settings, Save, Check, RefreshCw, Upload, ShieldCheck, User, Plus, Edit, Trash2, Users, X } from 'lucide-react';
 
 export default function PengaturanSekolah({ 
   profilGuru, 
   setProfilGuru, 
+  kelasList = [],
+  setKelasList,
+  siswaList,
+  setSiswaList,
   onResetData,
   showToast 
 }) {
   const [formData, setFormData] = useState({ ...profilGuru });
   const [mapelInput, setMapelInput] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+
+  // Class management modal state
+  const [isAddKelasOpen, setIsAddKelasOpen] = useState(false);
+  const [editingKelasId, setEditingKelasId] = useState(null);
+  const [kelasForm, setKelasForm] = useState({ id: '', nama: '', jumlahSiswa: 30 });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +43,77 @@ export default function PengaturanSekolah({
       ...formData,
       mataPelajaran: formData.mataPelajaran.filter(mp => mp !== mpToRemove)
     });
+  };
+
+  // Class Management Handlers
+  const handleOpenAddKelas = () => {
+    setEditingKelasId(null);
+    const nextNum = kelasList.length + 1;
+    setKelasForm({ id: `X-${nextNum}`, nama: `Kelas X-${nextNum} (Fase E)`, jumlahSiswa: 30 });
+    setIsAddKelasOpen(true);
+  };
+
+  const handleOpenEditKelas = (k) => {
+    setEditingKelasId(k.id);
+    setKelasForm({ id: k.id, nama: k.nama, jumlahSiswa: k.jumlahSiswa || 30 });
+    setIsAddKelasOpen(true);
+  };
+
+  const handleSaveKelas = (e) => {
+    e.preventDefault();
+    if (!kelasForm.nama.trim()) return;
+
+    const classId = (kelasForm.id.trim() || kelasForm.nama).replace(/\s+/g, '-').toUpperCase();
+
+    if (editingKelasId) {
+      // Edit existing class name/details
+      const updatedList = kelasList.map(k => 
+        k.id === editingKelasId ? { ...k, id: classId, nama: kelasForm.nama, jumlahSiswa: Number(kelasForm.jumlahSiswa) || 30 } : k
+      );
+      if (setKelasList) setKelasList(updatedList);
+
+      if (editingKelasId !== classId && setSiswaList && siswaList) {
+        const newSiswaList = { ...siswaList };
+        newSiswaList[classId] = newSiswaList[editingKelasId] || [];
+        delete newSiswaList[editingKelasId];
+        setSiswaList(newSiswaList);
+      }
+      if (showToast) showToast(`Nama kelas ${kelasForm.nama} berhasil diperbarui!`);
+    } else {
+      // Add new class
+      if (kelasList.some(k => k.id === classId)) {
+        alert('Kode / ID Kelas ini sudah ada, mohon gunakan nama lain.');
+        return;
+      }
+      const newClass = {
+        id: classId,
+        nama: kelasForm.nama,
+        jumlahSiswa: Number(kelasForm.jumlahSiswa) || 30
+      };
+      if (setKelasList) setKelasList([...kelasList, newClass]);
+      if (setSiswaList && siswaList && !siswaList[classId]) {
+        setSiswaList({ ...siswaList, [classId]: [] });
+      }
+      if (showToast) showToast(`Kelas baru (${kelasForm.nama}) berhasil ditambahkan!`);
+    }
+
+    setIsAddKelasOpen(false);
+  };
+
+  const handleDeleteKelas = (classId, className) => {
+    if (kelasList.length <= 1) {
+      alert('Sistem harus memiliki minimal 1 kelas.');
+      return;
+    }
+    if (window.confirm(`Hapus kelas "${className}"? Semua daftar siswa & presensi kelas ini akan terhapus.`)) {
+      if (setKelasList) setKelasList(kelasList.filter(k => k.id !== classId));
+      if (setSiswaList && siswaList) {
+        const newSiswaMap = { ...siswaList };
+        delete newSiswaMap[classId];
+        setSiswaList(newSiswaMap);
+      }
+      if (showToast) showToast(`Kelas ${className} berhasil dihapus!`, 'Berhasil Dihapus');
+    }
   };
 
   return (
@@ -138,7 +218,65 @@ export default function PengaturanSekolah({
           </div>
         </div>
 
-        {/* Section 2: Data Instansi Sekolah */}
+        {/* Section 2: Manajemen Daftar Kelas (Tambah, Edit, Kurangi) */}
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 pb-3">
+            <div>
+              <h4 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
+                <Users className="w-4 h-4 text-teal-600" />
+                <span>Manajemen Daftar Kelas ({kelasList.length} Kelas Aktif)</span>
+              </h4>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Ubah nama kelas, klik ikon (+) untuk menambah kelas baru, atau kurangi/hapus kelas yang tidak diampu.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleOpenAddKelas}
+              className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-md shadow-teal-600/20 flex items-center gap-1.5 transition shrink-0"
+            >
+              <Plus className="w-4 h-4 stroke-[3]" />
+              <span>Tambah Kelas Baru</span>
+            </button>
+          </div>
+
+          {/* Classes Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-1">
+            {kelasList.map((k) => (
+              <div 
+                key={k.id}
+                className="p-3.5 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200/80 dark:border-slate-600 flex items-center justify-between group hover:border-teal-500 transition"
+              >
+                <div>
+                  <h5 className="font-extrabold text-xs text-slate-800 dark:text-white">{k.nama}</h5>
+                  <span className="text-[11px] font-semibold text-slate-400">Kode: {k.id} | ~{k.jumlahSiswa || 30} Siswa</span>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditKelas(k)}
+                    className="p-1.5 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-slate-500 hover:text-teal-700 rounded-lg transition"
+                    title="Edit Nama Kelas"
+                  >
+                    <Edit className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteKelas(k.id, k.nama)}
+                    className="p-1.5 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-slate-400 hover:text-rose-600 rounded-lg transition"
+                    title="Kurangi / Hapus Kelas"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 3: Data Instansi Sekolah */}
         <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-sm space-y-4">
           <h4 className="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
             <ShieldCheck className="w-4 h-4 text-teal-600" />
@@ -245,6 +383,88 @@ export default function PengaturanSekolah({
         </div>
 
       </form>
+
+      {/* Modal Dialog: Tambah / Edit Kelas */}
+      {isAddKelasOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+              <h3 className="font-extrabold text-base text-slate-800 dark:text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-teal-600" />
+                <span>{editingKelasId ? 'Edit Nama Kelas' : 'Tambah Kelas Baru (+)'}</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsAddKelasOpen(false)}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-400"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveKelas} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Nama Lengkap Kelas (e.g. Kelas X-1 (Fase E))
+                </label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Kelas X-3 (Fase E)"
+                  value={kelasForm.nama}
+                  onChange={(e) => setKelasForm({ ...kelasForm, nama: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white focus:ring-2 focus:ring-teal-500"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Kode Singkat ID Kelas
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="X-3"
+                    value={kelasForm.id}
+                    onChange={(e) => setKelasForm({ ...kelasForm, id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white uppercase"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Estimasi Jumlah Siswa
+                  </label>
+                  <input
+                    type="number"
+                    value={kelasForm.jumlahSiswa}
+                    onChange={(e) => setKelasForm({ ...kelasForm, jumlahSiswa: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl font-bold dark:text-white"
+                    min="1"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setIsAddKelasOpen(false)}
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md shadow-teal-600/20"
+                >
+                  {editingKelasId ? 'Simpan Perubahan' : 'Tambah Kelas'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

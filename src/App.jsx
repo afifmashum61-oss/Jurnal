@@ -249,6 +249,7 @@ export default function App() {
           {activeTab === 'presensi' && (
             <PresensiSiswa
               kelasList={kelasList}
+              setKelasList={setKelasList}
               siswaList={siswaList}
               setSiswaList={setSiswaList}
               onSendPresensiToJurnal={handleSendPresensiToJurnal}
@@ -277,6 +278,10 @@ export default function App() {
             <PengaturanSekolah
               profilGuru={profilGuru}
               setProfilGuru={setProfilGuru}
+              kelasList={kelasList}
+              setKelasList={setKelasList}
+              siswaList={siswaList}
+              setSiswaList={setSiswaList}
               onResetData={handleResetData}
               showToast={showToast}
             />
