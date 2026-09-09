@@ -27,7 +27,8 @@ import {
 } from './services/firestoreService';
 
 export default function App() {
-  // Navigation State: Closed by default on mobile (<1024px), open on desktop (>=1024px)
+  // Navigation State
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1024;
