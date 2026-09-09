@@ -56,6 +56,14 @@ export default function SidebarNav({ activeTab, setActiveTab, isSidebarOpen, set
                 <p className="text-xs text-slate-400 font-medium">Pegangan Guru Modern</p>
               </div>
             </div>
+
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
+              title="Tutup Menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Teacher Profile Card Mini */}
@@ -90,7 +98,9 @@ export default function SidebarNav({ activeTab, setActiveTab, isSidebarOpen, set
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id);
-                    setIsMobileOpen(false);
+                    if (window.innerWidth < 1024) {
+                      setIsSidebarOpen(false);
+                    }
                   }}
                   className={`
                     w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150
