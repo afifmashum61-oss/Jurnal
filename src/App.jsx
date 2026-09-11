@@ -23,7 +23,16 @@ import {
   subscribeJurnal, 
   saveJurnalToFirestore, 
   deleteJurnalFromFirestore, 
-  saveProfilToFirestore 
+  saveProfilToFirestore,
+  subscribeProfil,
+  saveJadwalToFirestore,
+  subscribeJadwal,
+  saveKelasToFirestore,
+  subscribeKelas,
+  saveSiswaToFirestore,
+  subscribeSiswa,
+  saveCatatanToFirestore,
+  subscribeCatatan
 } from './services/firestoreService';
 
 export default function App() {
@@ -128,14 +137,17 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('jpg_kelasList', JSON.stringify(kelasList));
+    saveKelasToFirestore(kelasList);
   }, [kelasList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_siswaList', JSON.stringify(siswaList));
+    saveSiswaToFirestore(siswaList);
   }, [siswaList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_jadwalList', JSON.stringify(jadwalList));
+    saveJadwalToFirestore(jadwalList);
   }, [jadwalList]);
 
   useEffect(() => {
@@ -146,15 +158,18 @@ export default function App() {
     localStorage.setItem('jpg_catatanList', JSON.stringify(catatanList));
   }, [catatanList]);
 
-  // Real-time Firebase Firestore Subscription Listener
+  // Real-time Firebase Firestore Subscription Listeners
   useEffect(() => {
-    const unsubscribe = subscribeJurnal((cloudJournals) => {
-      if (cloudJournals && cloudJournals.length > 0) {
-        setJurnalList(cloudJournals);
-      }
-    });
+    const unsubs = [];
+    unsubs.push(subscribeJurnal((data) => { if (data?.length) setJurnalList(data); }));
+    unsubs.push(subscribeCatatan((data) => { if (data?.length) setCatatanList(data); }));
+    unsubs.push(subscribeJadwal((data) => { if (data?.length) setJadwalList(data); }));
+    unsubs.push(subscribeKelas((data) => { if (data?.length) setKelasList(data); }));
+    unsubs.push(subscribeSiswa((data && Object.keys(data).length) ? setSiswaList : () => {}));
+    unsubs.push(subscribeProfil((data) => { if (data?.nama) setProfilGuru(data); }));
+
     return () => {
-      if (unsubscribe) unsubscribe();
+      unsubs.forEach(unsub => { if (unsub) unsub(); });
     };
   }, []);
 

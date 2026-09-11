@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileText, Plus, Search, Award, ShieldAlert, Trash2, X, Check } from 'lucide-react';
+import { saveCatatanToFirestore, deleteCatatanFromFirestore } from '../services/firestoreService';
 
 export default function CatatanSiswa({ 
   catatanList, 
@@ -22,11 +23,13 @@ export default function CatatanSiswa({
     e.preventDefault();
     if (!formData.namaSiswa || !formData.catatan) return;
 
+    const newCatatan = { ...formData, id: `cat-${Date.now()}` };
     setCatatanList([
-      { ...formData, id: `cat-${Date.now()}` },
+      newCatatan,
       ...catatanList
     ]);
-    if (showToast) showToast(`Catatan kejadian siswa (${formData.namaSiswa}) berhasil disimpan!`);
+    saveCatatanToFirestore(newCatatan);
+    if (showToast) showToast(`Catatan kejadian siswa (${formData.namaSiswa}) berhasil disimpan ke Cloud & Lokal!`);
     setIsModalOpen(false);
     setFormData({
       tanggal: new Date().toISOString().split('T')[0],
@@ -41,6 +44,7 @@ export default function CatatanSiswa({
   const handleDelete = (id) => {
     if (window.confirm('Hapus catatan kejadian siswa ini?')) {
       setCatatanList(catatanList.filter(c => c.id !== id));
+      deleteCatatanFromFirestore(id);
       if (showToast) showToast('Catatan siswa berhasil dihapus!', 'Berhasil Dihapus');
     }
   };
