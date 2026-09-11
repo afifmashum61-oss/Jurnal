@@ -129,25 +129,21 @@ export default function App() {
   const [isJurnalFormOpen, setIsJurnalFormOpen] = useState(false);
   const [selectedJurnalForDetail, setSelectedJurnalForDetail] = useState(null);
 
-  // Sync state changes to localStorage & Firebase Firestore
+  // Sync state changes to localStorage
   useEffect(() => {
     localStorage.setItem('jpg_profilGuru', JSON.stringify(profilGuru));
-    saveProfilToFirestore(profilGuru);
   }, [profilGuru]);
 
   useEffect(() => {
     localStorage.setItem('jpg_kelasList', JSON.stringify(kelasList));
-    saveKelasToFirestore(kelasList);
   }, [kelasList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_siswaList', JSON.stringify(siswaList));
-    saveSiswaToFirestore(siswaList);
   }, [siswaList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_jadwalList', JSON.stringify(jadwalList));
-    saveJadwalToFirestore(jadwalList);
   }, [jadwalList]);
 
   useEffect(() => {
@@ -158,18 +154,15 @@ export default function App() {
     localStorage.setItem('jpg_catatanList', JSON.stringify(catatanList));
   }, [catatanList]);
 
-  // Real-time Firebase Firestore Subscription Listeners
+  // Real-time Firebase Firestore Subscription Listener (Jurnal)
   useEffect(() => {
-    const unsubs = [];
-    unsubs.push(subscribeJurnal((data) => { if (data?.length) setJurnalList(data); }));
-    unsubs.push(subscribeCatatan((data) => { if (data?.length) setCatatanList(data); }));
-    unsubs.push(subscribeJadwal((data) => { if (data?.length) setJadwalList(data); }));
-    unsubs.push(subscribeKelas((data) => { if (data?.length) setKelasList(data); }));
-    unsubs.push(subscribeSiswa((data && Object.keys(data).length) ? setSiswaList : () => {}));
-    unsubs.push(subscribeProfil((data) => { if (data?.nama) setProfilGuru(data); }));
-
+    const unsubscribe = subscribeJurnal((cloudJournals) => {
+      if (cloudJournals && cloudJournals.length > 0) {
+        setJurnalList(cloudJournals);
+      }
+    });
     return () => {
-      unsubs.forEach(unsub => { if (unsub) unsub(); });
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 
