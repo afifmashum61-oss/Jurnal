@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SidebarNav from './components/SidebarNav';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
@@ -129,25 +129,39 @@ export default function App() {
   const [isJurnalFormOpen, setIsJurnalFormOpen] = useState(false);
   const [selectedJurnalForDetail, setSelectedJurnalForDetail] = useState(null);
 
+  // Refs to track whether initial cloud data hydration has occurred (prevents overwriting Cloud with local default state on mount)
+  const isCloudProfilLoaded = useRef(false);
+  const isCloudKelasLoaded = useRef(false);
+  const isCloudSiswaLoaded = useRef(false);
+  const isCloudJadwalLoaded = useRef(false);
+
   // Sync state changes to localStorage and Cloud Firestore
   useEffect(() => {
     localStorage.setItem('jpg_profilGuru', JSON.stringify(profilGuru));
-    saveProfilToFirestore(profilGuru);
+    if (isCloudProfilLoaded.current) {
+      saveProfilToFirestore(profilGuru);
+    }
   }, [profilGuru]);
 
   useEffect(() => {
     localStorage.setItem('jpg_kelasList', JSON.stringify(kelasList));
-    saveKelasToFirestore(kelasList);
+    if (isCloudKelasLoaded.current) {
+      saveKelasToFirestore(kelasList);
+    }
   }, [kelasList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_siswaList', JSON.stringify(siswaList));
-    saveSiswaToFirestore(siswaList);
+    if (isCloudSiswaLoaded.current) {
+      saveSiswaToFirestore(siswaList);
+    }
   }, [siswaList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_jadwalList', JSON.stringify(jadwalList));
-    saveJadwalToFirestore(jadwalList);
+    if (isCloudJadwalLoaded.current) {
+      saveJadwalToFirestore(jadwalList);
+    }
   }, [jadwalList]);
 
   useEffect(() => {
@@ -169,22 +183,35 @@ export default function App() {
       if (cloudSiswaMap && Object.keys(cloudSiswaMap).length > 0) {
         setSiswaList(cloudSiswaMap);
       }
+      isCloudSiswaLoaded.current = true;
+    }, () => {
+      isCloudSiswaLoaded.current = true;
     });
     const unsubKelas = subscribeKelas((cloudKelasList) => {
       if (cloudKelasList && cloudKelasList.length > 0) {
         setKelasList(cloudKelasList);
       }
+      isCloudKelasLoaded.current = true;
+    }, () => {
+      isCloudKelasLoaded.current = true;
     });
     const unsubJadwal = subscribeJadwal((cloudJadwalList) => {
       if (cloudJadwalList && cloudJadwalList.length > 0) {
         setJadwalList(cloudJadwalList);
       }
+      isCloudJadwalLoaded.current = true;
+    }, () => {
+      isCloudJadwalLoaded.current = true;
     });
     const unsubProfil = subscribeProfil((cloudProfil) => {
       if (cloudProfil && cloudProfil.nama) {
         setProfilGuru(prev => ({ ...prev, ...cloudProfil }));
       }
+      isCloudProfilLoaded.current = true;
+    }, () => {
+      isCloudProfilLoaded.current = true;
     });
+
     return () => {
       if (unsubJurnal) unsubJurnal();
       if (unsubSiswa) unsubSiswa();

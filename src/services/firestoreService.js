@@ -112,7 +112,7 @@ export const deleteCatatanFromFirestore = async (catatanId) => {
 /**
  * --- PROFIL GURU & SEKOLAH ---
  */
-export const subscribeProfil = (onUpdate) => {
+export const subscribeProfil = (onUpdate, onDone) => {
   if (!isFirebaseConfigured() || !db) return null;
   try {
     const docRef = doc(db, COL_PROFIL, "utama");
@@ -120,11 +120,14 @@ export const subscribeProfil = (onUpdate) => {
       if (docSnap.exists()) {
         onUpdate(docSnap.data());
       }
+      if (onDone) onDone(docSnap.exists());
     }, (error) => {
       console.warn("⚠️ Firestore Listener Error (Profil):", error.message);
+      if (onDone) onDone(false);
     });
   } catch (error) {
     console.error("Gagal berlangganan Firestore Profil:", error);
+    if (onDone) onDone(false);
     return null;
   }
 };
@@ -156,7 +159,7 @@ export const saveJadwalToFirestore = async (jadwalList) => {
   }
 };
 
-export const subscribeJadwal = (onUpdate) => {
+export const subscribeJadwal = (onUpdate, onDone) => {
   if (!isFirebaseConfigured() || !db) return null;
   try {
     const docRef = doc(db, COL_JADWAL, "utama");
@@ -164,11 +167,14 @@ export const subscribeJadwal = (onUpdate) => {
       if (docSnap.exists() && docSnap.data()?.list) {
         onUpdate(docSnap.data().list);
       }
+      if (onDone) onDone(docSnap.exists());
     }, (error) => {
       console.warn("⚠️ Firestore Listener Error (Jadwal):", error.message);
+      if (onDone) onDone(false);
     });
   } catch (error) {
     console.error("Gagal berlangganan Firestore Jadwal:", error);
+    if (onDone) onDone(false);
     return null;
   }
 };
@@ -188,7 +194,7 @@ export const saveKelasToFirestore = async (kelasList) => {
   }
 };
 
-export const subscribeKelas = (onUpdate) => {
+export const subscribeKelas = (onUpdate, onDone) => {
   if (!isFirebaseConfigured() || !db) return null;
   try {
     const docRef = doc(db, COL_KELAS, "utama");
@@ -196,10 +202,13 @@ export const subscribeKelas = (onUpdate) => {
       if (docSnap.exists() && docSnap.data()?.list) {
         onUpdate(docSnap.data().list);
       }
+      if (onDone) onDone(docSnap.exists());
     }, (error) => {
       console.warn("⚠️ Firestore Listener Error (Kelas):", error.message);
+      if (onDone) onDone(false);
     });
   } catch (error) {
+    if (onDone) onDone(false);
     return null;
   }
 };
@@ -216,7 +225,7 @@ export const saveSiswaToFirestore = async (siswaMap) => {
   }
 };
 
-export const subscribeSiswa = (onUpdate) => {
+export const subscribeSiswa = (onUpdate, onDone) => {
   if (!isFirebaseConfigured() || !db) return null;
   try {
     const docRef = doc(db, COL_SISWA, "utama");
@@ -224,10 +233,13 @@ export const subscribeSiswa = (onUpdate) => {
       if (docSnap.exists() && docSnap.data()?.map) {
         onUpdate(docSnap.data().map);
       }
+      if (onDone) onDone(docSnap.exists());
     }, (error) => {
       console.warn("⚠️ Firestore Listener Error (Siswa):", error.message);
+      if (onDone) onDone(false);
     });
   } catch (error) {
+    if (onDone) onDone(false);
     return null;
   }
 };
