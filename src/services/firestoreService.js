@@ -179,7 +179,8 @@ export const subscribeJadwal = (onUpdate) => {
 export const saveKelasToFirestore = async (kelasList) => {
   if (!isFirebaseConfigured() || !db) return false;
   try {
-    await setDoc(doc(db, COL_KELAS, "utama"), { list: kelasList }, { merge: true });
+    await setDoc(doc(db, COL_KELAS, "utama"), { list: kelasList });
+    console.log("🔥 Kelas tersimpan di Cloud Firestore");
     return true;
   } catch (error) {
     console.error("❌ Gagal menyimpan Kelas ke Firestore:", error);
@@ -206,7 +207,8 @@ export const subscribeKelas = (onUpdate) => {
 export const saveSiswaToFirestore = async (siswaMap) => {
   if (!isFirebaseConfigured() || !db) return false;
   try {
-    await setDoc(doc(db, COL_SISWA, "utama"), { map: siswaMap }, { merge: true });
+    await setDoc(doc(db, COL_SISWA, "utama"), { map: siswaMap });
+    console.log("🔥 Siswa tersimpan di Cloud Firestore");
     return true;
   } catch (error) {
     console.error("❌ Gagal menyimpan Siswa ke Firestore:", error);

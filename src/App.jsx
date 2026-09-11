@@ -129,21 +129,25 @@ export default function App() {
   const [isJurnalFormOpen, setIsJurnalFormOpen] = useState(false);
   const [selectedJurnalForDetail, setSelectedJurnalForDetail] = useState(null);
 
-  // Sync state changes to localStorage
+  // Sync state changes to localStorage and Cloud Firestore
   useEffect(() => {
     localStorage.setItem('jpg_profilGuru', JSON.stringify(profilGuru));
+    saveProfilToFirestore(profilGuru);
   }, [profilGuru]);
 
   useEffect(() => {
     localStorage.setItem('jpg_kelasList', JSON.stringify(kelasList));
+    saveKelasToFirestore(kelasList);
   }, [kelasList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_siswaList', JSON.stringify(siswaList));
+    saveSiswaToFirestore(siswaList);
   }, [siswaList]);
 
   useEffect(() => {
     localStorage.setItem('jpg_jadwalList', JSON.stringify(jadwalList));
+    saveJadwalToFirestore(jadwalList);
   }, [jadwalList]);
 
   useEffect(() => {
@@ -154,15 +158,39 @@ export default function App() {
     localStorage.setItem('jpg_catatanList', JSON.stringify(catatanList));
   }, [catatanList]);
 
-  // Real-time Firebase Firestore Subscription Listener (Jurnal)
+  // Real-time Firebase Firestore Subscription Listeners (Jurnal, Siswa, Kelas, Jadwal, Profil)
   useEffect(() => {
-    const unsubscribe = subscribeJurnal((cloudJournals) => {
+    const unsubJurnal = subscribeJurnal((cloudJournals) => {
       if (cloudJournals && cloudJournals.length > 0) {
         setJurnalList(cloudJournals);
       }
     });
+    const unsubSiswa = subscribeSiswa((cloudSiswaMap) => {
+      if (cloudSiswaMap && Object.keys(cloudSiswaMap).length > 0) {
+        setSiswaList(cloudSiswaMap);
+      }
+    });
+    const unsubKelas = subscribeKelas((cloudKelasList) => {
+      if (cloudKelasList && cloudKelasList.length > 0) {
+        setKelasList(cloudKelasList);
+      }
+    });
+    const unsubJadwal = subscribeJadwal((cloudJadwalList) => {
+      if (cloudJadwalList && cloudJadwalList.length > 0) {
+        setJadwalList(cloudJadwalList);
+      }
+    });
+    const unsubProfil = subscribeProfil((cloudProfil) => {
+      if (cloudProfil && cloudProfil.nama) {
+        setProfilGuru(prev => ({ ...prev, ...cloudProfil }));
+      }
+    });
     return () => {
-      if (unsubscribe) unsubscribe();
+      if (unsubJurnal) unsubJurnal();
+      if (unsubSiswa) unsubSiswa();
+      if (unsubKelas) unsubKelas();
+      if (unsubJadwal) unsubJadwal();
+      if (unsubProfil) unsubProfil();
     };
   }, []);
 
