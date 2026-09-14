@@ -10,80 +10,74 @@
 
 /* Custom Print Styles for official school report */
 @media print {
-  /* Hide all non-printable layout elements (Sidebar, Header, Buttons, Badges, Toast) */
-  aside,
-  header,
-  nav,
-  .no-print,
-  .toast-notification {
-    display: none !important;
+  /* 1. Hide everything on the page by default */
+  body * {
+    visibility: hidden !important;
   }
 
-  /* Force pure white background and dark text on ALL elements regardless of Dark Mode */
-  *, *::before, *::after,
-  html, body, #root, main, div, section, article, table, thead, tbody, tr, th, td, p, span, h1, h2, h3, h4, h5, h6 {
+  /* 2. Show ONLY the printable document container and its children */
+  .printable-document,
+  .printable-document * {
+    visibility: visible !important;
+  }
+
+  /* 3. Position the printable document at top-left of paper */
+  .printable-document {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     background-color: #ffffff !important;
     background: #ffffff !important;
-    color: #0f172a !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
+    color: #000000 !important;
   }
 
+  /* 4. Ensure html & body paper is pure white */
   html, body {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     width: 100% !important;
     height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
   }
 
-  /* Reset main layout flex wrapper and sidebar left padding */
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-  }
-
-  div.flex-1 {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-    width: 100% !important;
-  }
-
-  /* Reset paper document container for crisp A4 output */
-  .printable-document {
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background-color: #ffffff !important;
-    background: #ffffff !important;
-  }
-
-  /* Table Specific styling for official report */
+  /* 5. Clean table & typography styling for print */
   .printable-document table {
     width: 100% !important;
     border-collapse: collapse !important;
-    border: 1px solid #0f172a !important;
+    border: 1px solid #000000 !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
   }
 
   .printable-document th {
     background-color: #f1f5f9 !important;
-    color: #0f172a !important;
+    color: #000000 !important;
     font-weight: 700 !important;
-    border: 1px solid #0f172a !important;
+    border: 1px solid #000000 !important;
   }
 
   .printable-document td {
-    border: 1px solid #0f172a !important;
-    color: #0f172a !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
   }
 
-  .print-only {
-    display: block !important;
+  .printable-document p,
+  .printable-document span,
+  .printable-document div,
+  .printable-document h2,
+  .printable-document h3,
+  .printable-document strong {
+    color: #000000 !important;
   }
 
   .print-break-inside-avoid {
