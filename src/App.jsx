@@ -64,7 +64,7 @@ export default function App() {
 
     // Force overwrite legacy/cached values
     data.nama = 'IVA MAKHMUDAH, S.Pd';
-    data.nip = 'PEG ID 20503856195003';
+    data.nip = (data.nip || '20503856195003').replace(/^PEG ID\s*/i, '');
     data.sekolah = 'MA Darussalam Sengon';
     if (!data.kota || data.kota === 'Kota Edukasi') data.kota = 'Jombang';
     if (!data.alamatSekolah || data.alamatSekolah.includes('Kota Edukasi') || data.alamatSekolah.includes('Pendidikan')) {

@@ -2,7 +2,7 @@
 
 export const initialProfilGuru = {
   nama: "IVA MAKHMUDAH, S.Pd",
-  nip: "PEG ID 20503856195003",
+  nip: "20503856195003",
   foto: "/foto-guru.png",
   sekolah: "MA Darussalam Sengon",
   alamatSekolah: "Jl. Darussalam No. 01, Sengon, Jombang",

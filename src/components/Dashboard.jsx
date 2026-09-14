@@ -107,7 +107,7 @@ export default function Dashboard({
                     {profilGuru?.nama || 'Guru Pengajar'}
                   </p>
                   <p className="text-[10px] text-emerald-200 font-medium truncate">
-                    {profilGuru?.nip || '-'}
+                    {profilGuru?.nip ? profilGuru.nip.replace(/^PEG ID\s*/i, '') : '-'}
                   </p>
                 </div>
               </div>

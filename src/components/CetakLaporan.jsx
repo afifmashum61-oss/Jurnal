@@ -136,8 +136,8 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
             <span>: <strong>{selectedMapel === 'semua' ? profilGuru?.mataPelajaran?.join(', ') : selectedMapel}</strong></span>
           </div>
           <div>
-            <span className="inline-block w-32 text-slate-600">Identitas / PEG ID</span>
-            <span>: {profilGuru?.nip}</span>
+            <span className="inline-block w-32 text-slate-600">Identitas / NIP</span>
+            <span>: {profilGuru?.nip?.replace(/^PEG ID\s*/i, '')}</span>
           </div>
           <div>
             <span className="inline-block w-32 text-slate-600">Kelas Diampu</span>
@@ -221,7 +221,7 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
             <p className="font-bold text-slate-900">Guru Mata Pelajaran</p>
             <div className="h-20" /> {/* Space for physical signature */}
             <p className="font-extrabold underline text-slate-900">{profilGuru?.nama || 'IVA MAKHMUDAH, S.Pd'}</p>
-            <p className="text-slate-600 text-[11px]">{profilGuru?.nip || 'PEG ID 20503856195003'}</p>
+            <p className="text-slate-600 text-[11px]">{profilGuru?.nip ? profilGuru.nip.replace(/^PEG ID\s*/i, '') : '20503856195003'}</p>
           </div>
         </div>
 

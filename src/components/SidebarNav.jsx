@@ -80,7 +80,7 @@ export default function SidebarNav({ activeTab, setActiveTab, isSidebarOpen, set
                 {profilGuru?.nama || 'Guru Pengajar'}
               </p>
               <p className="text-[11px] text-teal-700 dark:text-teal-400 font-medium truncate">
-                {profilGuru?.nip || '-'}
+                {profilGuru?.nip ? profilGuru.nip.replace(/^PEG ID\s*/i, '') : '-'}
               </p>
             </div>
           </div>

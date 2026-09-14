@@ -164,7 +164,7 @@ export default function PengaturanSekolah({
 
             <div>
               <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                PEG ID / NIP Guru
+                NIP / Identitas Guru
               </label>
               <input
                 type="text"
