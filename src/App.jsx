@@ -230,6 +230,21 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Dynamic Browser Tab Title Effect
+  useEffect(() => {
+    const titleMap = {
+      dashboard: 'Dashboard Utama - Jurnal Pegangan Guru',
+      jurnal: 'Jurnal Harian Mengajar - Jurnal Pegangan Guru',
+      jadwal: 'Jadwal Mengajar - Jurnal Pegangan Guru',
+      presensi: 'Presensi Siswa - Jurnal Pegangan Guru',
+      catatan: 'Catatan & Evaluasi Siswa - Jurnal Pegangan Guru',
+      laporan: 'Cetak Laporan Resmi - Jurnal Pegangan Guru',
+      pengaturan: 'Profil & Pengaturan Sekolah - Jurnal Pegangan Guru',
+    };
+
+    document.title = titleMap[activeTab] || 'Jurnal Pegangan Guru - MA Darussalam Sengon';
+  }, [activeTab]);
+
   // Quick Action Handler: Open Journal Form
   const handleQuickAddJurnal = () => {
     setActiveTab('jurnal');
