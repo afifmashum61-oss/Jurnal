@@ -19,11 +19,17 @@
     display: none !important;
   }
 
-  /* Reset body, html, and background colors for full-page A4 print */
+  /* Force pure white background and dark text on ALL elements regardless of Dark Mode */
+  *, *::before, *::after,
+  html, body, #root, main, div, section, article, table, thead, tbody, tr, th, td, p, span, h1, h2, h3, h4, h5, h6 {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
   html, body {
-    background-color: white !important;
-    background: white !important;
-    color: black !important;
     width: 100% !important;
     height: auto !important;
     margin: 0 !important;
@@ -53,6 +59,27 @@
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+  }
+
+  /* Table Specific styling for official report */
+  .printable-document table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border: 1px solid #0f172a !important;
+  }
+
+  .printable-document th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    border: 1px solid #0f172a !important;
+  }
+
+  .printable-document td {
+    border: 1px solid #0f172a !important;
+    color: #0f172a !important;
   }
 
   .print-only {
