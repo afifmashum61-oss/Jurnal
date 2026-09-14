@@ -26,7 +26,7 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors">
+    <header className="no-print sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 sm:px-8 py-3.5 flex items-center justify-between transition-colors">
       {/* Left section: Hamburger & Page Title */}
       <div className="flex items-center gap-4">
         <button

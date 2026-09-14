@@ -10,13 +10,49 @@
 
 /* Custom Print Styles for official school report */
 @media print {
-  body {
-    background-color: white !important;
-    color: black !important;
+  /* Hide all non-printable layout elements (Sidebar, Header, Buttons, Badges, Toast) */
+  aside,
+  header,
+  nav,
+  .no-print,
+  .toast-notification {
+    display: none !important;
   }
 
-  .no-print {
-    display: none !important;
+  /* Reset body, html, and background colors for full-page A4 print */
+  html, body {
+    background-color: white !important;
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Reset main layout flex wrapper and sidebar left padding */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  div.flex-1 {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Reset paper document container for crisp A4 output */
+  .printable-document {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   .print-only {
@@ -29,7 +65,7 @@
 
   @page {
     size: A4 portrait;
-    margin: 15mm;
+    margin: 15mm 12mm 15mm 12mm;
   }
 }
 

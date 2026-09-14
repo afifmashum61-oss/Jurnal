@@ -379,7 +379,7 @@ export default function App() {
 
       {/* Global Toast Notification Popup */}
       {toast.show && (
-        <div className="fixed top-5 right-5 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-emerald-600 dark:bg-emerald-700 text-white shadow-2xl rounded-2xl border border-emerald-400/40 transform transition-all duration-300">
+        <div className="no-print fixed top-5 right-5 z-[9999] flex items-center gap-3 px-5 py-3.5 bg-emerald-600 dark:bg-emerald-700 text-white shadow-2xl rounded-2xl border border-emerald-400/40 transform transition-all duration-300">
           <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-5 h-5 text-white" />
           </div>

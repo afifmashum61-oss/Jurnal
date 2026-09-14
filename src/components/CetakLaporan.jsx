@@ -107,7 +107,7 @@ export default function CetakLaporan({ profilGuru, jurnalList, kelasList }) {
       </div>
 
       {/* PRINT CONTAINER / PAPER PREVIEW */}
-      <div className="bg-white text-slate-900 p-8 sm:p-10 rounded-2xl border border-slate-200 shadow-lg max-w-4xl mx-auto space-y-6">
+      <div className="printable-document bg-white text-slate-900 p-8 sm:p-10 rounded-2xl border border-slate-200 shadow-lg max-w-4xl mx-auto space-y-6">
         
         {/* KOP SURAT SEKOLAH */}
         <div className="text-center border-b-4 border-double border-slate-900 pb-4">
